@@ -10,6 +10,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage('');
 
     try {
       const response = await fetch('http://localhost:8080/api/login', {
@@ -25,12 +26,33 @@ function Login() {
       if (response.ok) {
         setMessage('✅ Login successful!');
       } else {
-        setMessage('❌ Login failed: ' + data.message);
+        setMessage('❌ Login failed: ' + (data.message || 'Unknown error'));
       }
     } catch (error) {
       setMessage('❌ Error connecting to server');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const inputStyle = {
+    width: '100%',
+    padding: '12px 15px',
+    borderRadius: '10px',
+    border: 'none',
+    background: 'rgba(255, 255, 255, 0.3)',
+    color: '#fff',
+    fontSize: '15px',
+    outline: 'none',
+    transition: '0.3s',
+  };
+
+  const handleFocus = (e) => {
+    e.target.style.background = 'rgba(255,255,255,0.5)';
+  };
+
+  const handleBlur = (e) => {
+    e.target.style.background = 'rgba(255,255,255,0.3)';
   };
 
   return (
@@ -73,21 +95,11 @@ function Login() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px 15px',
-                borderRadius: '10px',
-                border: 'none',
-                background: 'rgba(255, 255, 255, 0.3)',
-                color: '#fff',
-                fontSize: '15px',
-                outline: 'none',
-                transition: '0.3s',
-              }}
+              style={inputStyle}
               placeholder="Enter username"
               required
-              onFocus={(e) => e.target.style.background = 'rgba(255,255,255,0.5)'}
-              onBlur={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </div>
 
@@ -97,21 +109,11 @@ function Login() {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px 40px 12px 15px',
-                borderRadius: '10px',
-                border: 'none',
-                background: 'rgba(255, 255, 255, 0.3)',
-                color: '#fff',
-                fontSize: '15px',
-                outline: 'none',
-                transition: '0.3s',
-              }}
+              style={{ ...inputStyle, paddingRight: '40px' }}
               placeholder="Enter password"
               required
-              onFocus={(e) => e.target.style.background = 'rgba(255,255,255,0.5)'}
-              onBlur={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -128,23 +130,21 @@ function Login() {
             </span>
           </div>
 
-          <button type="submit" disabled={loading} style={{
-            width: '100%',
-            padding: '14px',
-            background: loading ? '#ccc' : 'linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%)',
-            color: '#000',
-            fontWeight: '600',
-            fontSize: '16px',
-            border: 'none',
-            borderRadius: '10px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            transition: '0.3s',
-          }}
-            onMouseOver={(e) => {
-              if (!loading) e.target.style.opacity = 0.8;
-            }}
-            onMouseOut={(e) => {
-              if (!loading) e.target.style.opacity = 1;
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '14px',
+              background: loading ? '#ccc' : 'linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%)',
+              color: '#000',
+              fontWeight: '600',
+              fontSize: '16px',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: '0.3s',
+              opacity: loading ? 0.7 : 1,
             }}
           >
             {loading ? 'Logging in...' : 'Login'}
