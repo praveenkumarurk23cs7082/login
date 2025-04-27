@@ -137,7 +137,7 @@ function Login() {
             fontSize: '16px',
             border: 'none',
             borderRadius: '10px',
-            cursor: 'pointer',
+            cursor: loading ? 'not-allowed' : 'pointer',
             transition: '0.3s',
           }}
             onMouseOver={(e) => {
@@ -153,14 +153,13 @@ function Login() {
 
         {message && (
           <div style={{
-            marginTop: '20px',
+            marginTop: '25px',
             padding: '12px',
             backgroundColor: message.includes('successful') ? 'rgba(0,255,0,0.2)' : 'rgba(255,0,0,0.2)',
             color: message.includes('successful') ? '#00FF7F' : '#FF4500',
             borderRadius: '10px',
             textAlign: 'center',
             fontWeight: '600',
-            marginTop: '25px',
             fontSize: '14px'
           }}>
             {message}
